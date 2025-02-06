@@ -10,21 +10,50 @@ async function loadTasks() {
     tasks.forEach((task, index) => {
         const li = document.createElement("li");
         li.className = 'task';
-        li.innerHTML = `
-            <span>${task}</span>
-            <button onclick="deleteTask(${index})">❌</button>
-        `;
+        if (task.completed) {
+            li.classList.add("completed");
+        }
+        
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = task.completed;
+        checkbox.addEventListener("change", () => toggleTask(index, !task.completed));
+
+        const taskText = document.createElement("span");
+        taskText.textContent = task.text;
+        if (task.completed) {
+            taskText.style.textDecoration = "line-through";
+            taskText.style.color = "gray";
+        }
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "X";
+        deleteButton.onclick = () => deleteTask(index);
+
+        li.appendChild(checkbox);
+        li.appendChild(taskText);
+        li.appendChild(deleteButton);
         list.appendChild(li);
     });
 }
 
+
+async function toggleTask(index, completed) {
+    await fetch(`${apiUrl}/${index}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ completed: completed })
+    });
+    loadTasks();
+}
+
 async function addTask() {
-    const task = document.getElementById("taskInput").value;
-    if (task) {
+    const taskInput = document.getElementById("taskInput").value.trim();
+    if (taskInput) {
         await fetch(apiUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ task })
+            body: JSON.stringify({ text: taskInput, completed: false })
         });
         document.getElementById('taskInput').value = "";
         loadTasks();
@@ -35,5 +64,12 @@ async function deleteTask(index) {
     await fetch(`${apiUrl}/${index}`, { method: "DELETE" }); 
     loadTasks(); 
 }
+
+document.getElementById("taskInput").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {  
+        event.preventDefault();   
+        addTask();               
+    }
+});
 
 loadTasks();

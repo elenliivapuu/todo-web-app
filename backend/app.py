@@ -4,7 +4,7 @@ import json
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/tasks/*": {"origins": "*"}})
 TASKS_FILE = "tasks.json"
 
 def load_tasks():
@@ -21,13 +21,17 @@ def save_tasks(tasks):
 
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
-    return jsonify(load_tasks())
+    tasks = load_tasks()
+    return jsonify([{"text": task["text"], "completed": task.get("completed", False)} for task in tasks])
 
 @app.route('/tasks', methods=['POST'])
 def add_task():
     tasks = load_tasks()
-    new_task = request.json.get('task')
-    if new_task:
+    new_task = {
+        "text": request.json.get("text", ""),
+        "completed": request.json.get("completed", False)
+    }
+    if new_task["text"]:
         tasks.append(new_task)
         save_tasks(tasks)
     return jsonify(tasks)
@@ -40,10 +44,13 @@ def delete_task(index):
         save_tasks(tasks)
     return jsonify(tasks)
 
-# @app.route('/tasks/done/<int:index>', methods=['PUT'])
-# def mark_done(index):
-#     tasks = load_tasks()
-#     if <= index < len(tasks):
+@app.route('/tasks/<int:index>', methods=['PUT'])
+def update_task(index):
+    tasks = load_tasks()
+    if 0 <= index < len(tasks):
+        tasks[index]["completed"] = request.json.get('completed', False)
+        save_tasks(tasks)
+    return jsonify(tasks)
 
 if __name__ == "__main__":
     app.run(debug=True)
