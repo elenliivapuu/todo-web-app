@@ -12,6 +12,7 @@ async function loadTasks() {
         li.className = 'task';
         if (task.completed) {
             li.classList.add("completed");
+            li.style.backgroundColor = "#d4d4d4e8"
         }
         
         const checkbox = document.createElement("input");
