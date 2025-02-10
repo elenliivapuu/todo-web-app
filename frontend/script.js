@@ -35,6 +35,7 @@ async function loadTasks() {
         li.appendChild(taskText);
         li.appendChild(deleteButton);
         list.appendChild(li);
+        console.log(li);
     });
 }
 
@@ -72,5 +73,21 @@ document.getElementById("taskInput").addEventListener("keypress", function(event
         addTask();               
     }
 });
+
+async function dropDown() {
+    document.getElementById("taskDropdown").classList.toggle("show");
+}
+window.onclick = function(event) {
+    if(!event.target.matches('.three-dot')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains("show")) {
+                openDropdown.classList.remove("show");
+            }
+        }
+    }
+}
 
 loadTasks();
