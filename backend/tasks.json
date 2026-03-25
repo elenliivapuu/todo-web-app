@@ -1,26 +1,22 @@
 [
     {
-        "text": "hug bepis",
+        "text": "Completed task",
+        "completed": true
+    },
+    {
+        "text": "Sample Task 1",
         "completed": false
     },
     {
-        "text": "kiss bepis",
+        "text": "Sample Task 2",
         "completed": false
     },
     {
-        "text": "panda1",
+        "text": "Sample Task 3",
         "completed": false
     },
     {
-        "text": "panda2",
-        "completed": false
-    },
-    {
-        "text": "panda3",
-        "completed": false
-    },
-    {
-        "text": "panda",
+        "text": "Delete this task!",
         "completed": false
     }
 ]

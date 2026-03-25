@@ -4,7 +4,7 @@ import json
 import os
 
 app = Flask(__name__)
-CORS(app, resources={r"/tasks/*": {"origins": "*"}})
+CORS(app, resources={r"/tasks*": {"origins": ["http://localhost:5500", "http://127.0.0.1:5500"]}})
 TASKS_FILE = "tasks.json"
 
 def load_tasks():
@@ -53,4 +53,4 @@ def update_task(index):
     return jsonify(tasks)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
